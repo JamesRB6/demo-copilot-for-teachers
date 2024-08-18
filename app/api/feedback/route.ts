@@ -29,23 +29,26 @@ export async function POST(req: Request): Promise<Response> {
 
     // Construct the final prompt
     const generatePrompt = promptType === 'feedback' 
-      ? `Using the provided learning outcomes, please evaluate the following student submission. Focus your feedback on each of the following learning outcomes:
+      ? `Using the provided learning outcomes, please evaluate the following grade 8 student submission. 
+      Focus your feedback on grade 8 level work on each of the following learning outcomes:
       ${learningOutcomesFeedback}
       
       \n\nAfter addressing the learning outcomes, please provide comments on the following areas:
       \n\n- **Structure:** Evaluate the coherence, flow, and organization of ideas.
       \n\n- **Strengths:** Highlight the key strengths of the submission.
-      \n\n- **Critical Thinking and Analysis:** Assess the student's ability to integrate and synthesize information, including the quality of argumentation and original insights.
+      \n\n- **Critical Thinking and Analysis:** Assess the student's ability to integrate and synthesize information, 
+      including the quality of argumentation and original insights.
       
-      Ensure that the feedback is well-structured with each section separated by two line breaks (double newlines) and does not exceed twice the length of the student's writing, which is ${maxFeedbackLength} characters. Use Markdown formatting to clearly separate sections.`
+      Ensure that the feedback is well-structured with each section separated by two line breaks (double newlines) 
+      and does not exceed twice the length of the student's writing, which is ${maxFeedbackLength} characters. Use Markdown formatting to clearly separate sections.`
       : 'Grade the student writing. Based on the expected learning outcomes and marking criteria, please provide a mark out of 100 for the following student writing.';
 
     console.log(studentWriting, learningOutcomes, markingCriteria, promptType);
 
     const result = await streamText({
-      model: openai('gpt-3.5-turbo'),
+      model: openai('gpt-4o-mini'),
       system: `
-        Imagine yourself as a seasoned high school educator with extensive experience teaching across multiple academic disciplines, including mathematics, sciences, humanities, and arts. Your expertise is not only in delivering subject content but also in fostering critical thinking, creativity, and problem-solving skills among students. You are adept at using a variety of teaching methods, from traditional lectures to technology-integrated interactive sessions, to cater to diverse learning styles. Over the years, you have developed proficiency in creating engaging lesson plans, conducting rigorous assessments, and providing constructive feedback. Your role also involves mentoring students on academic and personal development, collaborating with colleagues to enhance interdisciplinary learning, and staying updated with the latest educational research and technology.`,
+        Imagine yourself as a seasoned high school educator with extensive experience teaching across multiple academic disciplines, including mathematics, sciences, history and geography. You will be marking work on grade 8 students that are between ages of 12-14. Your expertise is not only in delivering subject content but also in fostering critical thinking, creativity, and problem-solving skills among students. You are adept at using a variety of teaching methods, from traditional lectures to technology-integrated interactive sessions, to cater to diverse learning styles. Over the years, you have developed proficiency in creating engaging lesson plans, conducting rigorous assessments, and providing constructive feedback. Your role also involves mentoring students on academic and personal development, collaborating with colleagues to enhance interdisciplinary learning, and staying updated with the latest educational research and technology.`,
       messages: [
         {
           role: 'user',
